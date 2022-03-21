@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>echarts大屏展示</title>
+		<script src="{{ url_for('static', filename='echarts.js') }}"></script>
+		<link href="../static/css/main.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div id="home">
+			<div id="title">
+				河源出租房数据可视化大屏
+			</div>
+			<div id="name">by zyf</div>
+			<div id="l1">左1</div>
+			<div id="l2">左2</div>
+			<div id="c1">中1</div>
+
+			<div id="c2">中2</div>
+			<div id="r1">右1</div>
+			<div id="r2">右2</div>
+		</div>
+
+		<script type="text/javascript">
+			// l1环图
+			var myChart1 = echarts.init(document.getElementById('c2'));
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					text: '楼盘出租房占比TOP16',
+					left: 'center',
+					textStyle: {
+						fontSize: 30
+					}
+				},
+				tooltip: {
+					trigger: 'item',
+					formatter: '{a} <br/>{b} : {c} ({d}%)'
+				},
+				legend: {
+					orient: 'horizontal',
+					left: 'top',
+					top:'bottom',
+					data: {{dict_return['loupan_type']|tojson}}
+				},
+				series: [
+					{
+						name: '占比',
+						type: 'pie',
+						radius:['30%','70%'],
+						data: {{dict_return['loupan_huan']|tojson}},
+					}
+				]
+			};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart1.setOption(option);
+
+			// r1柱形图
+			var myChart2 = echarts.init(document.getElementById('r1'));
+		// 指定图表的配置项和数据
+			var option = {
+				title: {
+						text: '小区新房每平米价格排行',
+						left:'center',
+						textStyle: {
+							fontSize: 30
+						}
+					},
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: {
+						type: 'shadow'
+					}
+				},
+				// 工具栏设置
+				toolbox:{
+					show:true,
+					feature:{
+						mark:{show:true},
+						dataView:{show:true,readOnly:false},
+						magicType:{show:true,type:['line','bar']},
+						restore:{show:true},
+						saveAsImage:{show:true}
+					}
+				},
+				legend: {
+					data:['热门公司']
+				},
+				xAxis:{
+						data: {{dict_return['ren_type']|tojson}}
+					},
+				yAxis: {},
+				series: [
+					{
+					name: '数量',
+					type: 'line',
+					data: {{dict_return['ren_counts']|tojson}}
+					},
+				]
+			};
+			// 使用刚指定的配置项和数据显示图表。
+			myChart2.setOption(option);
+
+			// l1柱形图
+			var myChart2 = echarts.init(document.getElementById('l1'));
+		// 指定图表的配置项和数据
+			var option = {
+				title: {
+						text: '出租房房屋大小TOP10',
+						left:'center',
+						textStyle: {
+							fontSize: 30
+						}
+					},
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: {
+						type: 'shadow'
+					}
+				},
+				// 工具栏设置
+				toolbox:{
+					show:true,
+					feature:{
+						mark:{show:true},
+						dataView:{show:true,readOnly:false},
+						magicType:{show:true,type:['line','bar']},
+						restore:{show:true},
+						saveAsImage:{show:true}
+					}
+				},
+				legend: {
+					data:['热门公司']
+				},
+				xAxis:{
+						data: {{dict_return['mianji_type']|tojson}}
+					},
+				yAxis: {},
+				series: [
+					{
+					name: '数量',
+					type: 'bar',
+					data: {{dict_return['mianji_counts']|tojson}}
+					},
+				]
+			};
+			// 使用刚指定的配置项和数据显示图表。
+			myChart2.setOption(option);
+		</script>
+	</body>
+
+</html>

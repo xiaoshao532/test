@@ -1,0 +1,48 @@
+一：基础
+    安装scrapy
+        pip install scrapy
+    创建scrapy工程
+        scrapy startproject 名称
+    在spiders子目录中创建一个爬虫文件
+        cd xxx
+        scrapy genspider 文件名称 网址
+    执行工程
+        scrapy crawl 文件名称
+        scrapy crawl 文件名称 --nolog #不输出日志
+
+    ROBOTSTXT_OBEY协议
+        需要关闭
+
+    # 显示指定类型的日志信息
+    LOG_LEVEL = 'ERROR'
+
+
+二：数据解析
+    修改
+        ROBOTSTXT_OBEY = False
+        USER_AGENT =
+        LOG_LEVEL = 'ERROR'
+
+    1:xpath返回的是列表，单实列表元素一定是Selector类型的对象
+        .extract()
+        ''.join() # 列表转字符串
+
+三：scrapy持久化存储
+    基于终端指令
+        要求：只可以将parse方法的返回值存储到本地文本文件中
+        scrapy crawl xxx -o ./
+    基于管道
+        编码流程：
+            数据解析
+            在item累中定义相关的属性
+            将解析数据封装存储到item类型的对象
+            将item类型的对象提交给管道进行持久化存储的操作
+            在管道类的process_item中要将其接收到的item对象中存储的数据进行持久化存储操作
+            在配置文件中开启管道
+
+    csv 文件乱码
+    encoding='utf_8_sig'
+
+
+
+

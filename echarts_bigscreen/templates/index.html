@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>echarts大屏展示</title>
+		<script src="{{ url_for('static', filename='echarts.js') }}"></script>
+		<script src="{{ url_for('static', filename='jquery-1.11.1.min.js') }} "></script>
+		<link href="../static/css/main.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div id="home">
+			<div id="title">
+				河源房地产可视化大屏
+			</div>
+			<div id="anniu">
+				<button onclick="window.location.href = 'https://heyuan.58.com/chuzu/'">出租房</button>
+				<button onclick="window.location.href = 'https://heyuan.58.com/ershoufang/'">二手房</button>
+				<button onclick="window.location.href = 'https://heyuan.58.com/xinfang/'">新房</button>
+			</div>
+			<div id="name">by zyf</div>
+			<div id="l1"></div>
+			<div id="l2"></div>
+			<div id="c1"></div>
+			<div id="c2"></div>
+			<div id="c3"></div>
+			<div id="r1"></div>
+			<div id="r2"></div>
+		</div>
+
+		<script>
+		function gettime(){
+			$.ajax({
+				url:"/time",
+				timeout:10000,//超时时间设置为10秒；
+				success:function(data){
+					$("#tim").html(data)
+				},
+				error:function(xhr,type,errorThrown){
+				}
+
+			});
+
+		}
+		setInterval(gettime,1000)
+<!--		// 获取实时统计数-->
+<!--		function get_c1_data(){-->
+<!--			$.ajax({-->
+<!--				url:"/c1",-->
+<!--				success:function(data){-->
+<!--					$(".num h1").eq(0).text(data.mallscounts);-->
+<!--					$(".num h1").eq(1).text(data.storescounts);-->
+<!--					$(".num h1").eq(2).text(data.commentscounts);-->
+<!--					$(".num h1").eq(3).text(data.meanprices);-->
+<!--					-->
+<!--				},-->
+<!--				error:function(xhr,type,errorThrown){-->
+<!--				}-->
+<!--				-->
+<!--			})-->
+<!--		}-->
+<!--		setInterval(get_c1_data,1000)-->
+
+		</script>
+
+		<script type="text/javascript">
+			var myChart1 = echarts.init(document.getElementById('c1'),);
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					text: '各城区出租房占比',
+					left: 'left',
+					textStyle: {
+
+						fontSize: 30
+					}
+				},
+				tooltip: {
+					trigger: 'item',
+					formatter: '{a} <br/>{b} : {c} ({d}%)'
+				},
+				legend: {
+					orient: 'horizontal',
+					left: 'top',
+					top:'bottom',
+					data: {{dict_return['ren_type']|tojson}}
+				},
+				series: [
+					{
+						name: '占比',
+						type: 'pie',
+						radius:['30%','70%'],
+						data: {{dict_return['ren']|tojson}},
+					}
+				]
+			};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart1.setOption(option);
+
+
+			var myChart2 = echarts.init(document.getElementById('c2'));
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					text: '各城区二手房占比',
+					left: 'left',
+					textStyle: {
+						fontSize: 30
+					}
+				},
+				tooltip: {
+					trigger: 'item',
+					formatter: '{a} <br/>{b} : {c} ({d}%)'
+				},
+				legend: {
+					orient: 'horizontal',
+					left: 'top',
+					top:'bottom',
+					data: {{dict_return['sen_type']|tojson}}
+				},
+				series: [
+					{
+						name: '占比',
+						type: 'pie',
+						radius:['30%','70%'],
+						data: {{dict_return['sen']|tojson}},
+					}
+				]
+			};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart2.setOption(option);
+
+
+			var myChart3 = echarts.init(document.getElementById('c3'));
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					text: '各城区新房占比',
+					left: 'left',
+					textStyle: {
+						fontSize: 30
+					}
+				},
+				tooltip: {
+					trigger: 'item',
+					formatter: '{a} <br/>{b} : {c} ({d}%)'
+				},
+				legend: {
+					orient: 'horizontal',
+					left: 'top',
+					top:'bottom',
+					data: {{dict_return['new_type']|tojson}}
+				},
+				series: [
+					{
+						name: '占比',
+						type: 'pie',
+						radius:['30%','70%'],
+						data: {{dict_return['new']|tojson}},
+					}
+				]
+			};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart3.setOption(option);
+
+			var myChart4 = echarts.init(document.getElementById('r2'));
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+						text: '新房销售状态',
+						left:'center',
+						textStyle: {
+							fontSize: 30
+						}
+					},
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: {
+						type: 'shadow'
+					}
+				},
+				// 工具栏设置
+				toolbox:{
+					show:true,
+					feature:{
+						mark:{show:true},
+						dataView:{show:true,readOnly:false},
+						magicType:{show:true,type:['line','bar']},
+						restore:{show:true},
+						saveAsImage:{show:true}
+					}
+				},
+				legend: {
+					data:['热门公司']
+				},
+				xAxis:{
+						data: {{dict_return['status_type']|tojson}}
+					},
+				yAxis: {},
+				series: [
+					{
+					name: '数量',
+					type: 'bar',
+					data: {{dict_return['status_counts']|tojson}}
+					},
+				]
+			};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart4.setOption(option);
+
+				var myChart7 = echarts.init(document.getElementById('r1'));
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+						text: '新房每平方价格排行',
+						left:'center',
+						textStyle: {
+							fontSize: 30
+						}
+					},
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: {
+						type: 'shadow'
+					}
+				},
+				// 工具栏设置
+				toolbox:{
+					show:true,
+					feature:{
+						mark:{show:true},
+						dataView:{show:true,readOnly:false},
+						magicType:{show:true,type:['line','bar']},
+						restore:{show:true},
+						saveAsImage:{show:true}
+					}
+				},
+				legend: {
+					data:['热门公司']
+				},
+				xAxis:{
+						data: {{dict_return['xiaoqu_names']|tojson}}
+					},
+				yAxis: {},
+				series: [
+					{
+					name: '每平方价格',
+					type: 'line',
+					data: {{dict_return['xiaoqu_counts']|tojson}}
+					},
+				]
+			};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart7.setOption(option);
+
+
+		var myChart5 = echarts.init(document.getElementById('l1'));
+		const colors = ['#5470C6', '#EE6666'];
+		var option = {
+		  color: colors,
+			title: {
+						text: '各城区新房与出租房每平方均价',
+						left:'center',
+						textStyle: {
+							fontSize: 30
+						}
+					},
+		  tooltip: {
+			trigger: 'none',
+			axisPointer: {
+			  type: 'cross'
+			}
+		  },
+		  legend: {
+			   bottom: 10,
+				  left: 'center'
+			},
+		  grid: {
+			top: 70,
+			bottom: 50
+		  },
+		  xAxis: [
+			{
+			  type: 'category',
+			  axisTick: {
+				alignWithLabel: true
+			  },
+			  axisLine: {
+				onZero: false,
+				lineStyle: {
+				  color: colors[1]
+				}
+			  },
+			  axisPointer: {
+				label: {
+				  formatter: function (params) {
+					return (
+					  'Precipitation  ' +
+					  params.value +
+					  (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+					);
+				  }
+				}
+			  },
+			  // prettier-ignore
+			  data: {{dict_return['sen_zhe_names']|tojson}}
+			},
+			{
+			  type: 'category',
+			  axisTick: {
+				alignWithLabel: true
+			  },
+			  axisLine: {
+				onZero: false,
+				lineStyle: {
+				  color: colors[0]
+				}
+			  },
+			  axisPointer: {
+				label: {
+				  formatter: function (params) {
+					return (
+					  'Precipitation  ' +
+					  params.value +
+					  (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+					);
+				  }
+				}
+			  },
+			  // prettier-ignore
+			  data: {{dict_return['new_zhe_names']|tojson}}
+			}
+		  ],
+		  yAxis: [
+			{
+			  type: 'value'
+			}
+		  ],
+		  series: [
+			{
+			  name: '各城区二手房每平米均价',
+			  type: 'line',
+			  xAxisIndex: 1,
+			  smooth: true,
+			  emphasis: {
+				focus: 'series'
+			  },
+			  data: {{dict_return['sen_zhe_counts']|tojson}}
+			},
+			{
+			  name: '各城区新房每平米均价',
+			  type: 'line',
+			  smooth: true,
+			  emphasis: {
+				focus: 'series'
+			  },
+			  data: {{dict_return['new_zhe_counts']|tojson}}
+			}
+		  ]
+		};
+		myChart5.setOption(option);
+
+			var myChart6 = echarts.init(document.getElementById('l2'));
+		// 指定图表的配置项和数据
+			var option = {
+				title: {
+						text: '各城区出租房房租均价',
+						left:'center',
+						textStyle: {
+							fontSize: 30
+						}
+					},
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: {
+						type: 'shadow'
+					}
+				},
+				// 工具栏设置
+				toolbox:{
+					show:true,
+					feature:{
+						mark:{show:true},
+						dataView:{show:true,readOnly:false},
+						magicType:{show:true,type:['line','bar']},
+						restore:{show:true},
+						saveAsImage:{show:true}
+					}
+				},
+				legend: {
+					data:['热门公司']
+				},
+				xAxis:{
+						data: {{dict_return['new_Ren_names']|tojson}}
+					},
+				yAxis: {},
+				series: [
+					{
+					name: '价格',
+					type: 'line',
+					data: {{dict_return['new_Ren_counts']|tojson}}
+					},
+				]
+			};
+			// 使用刚指定的配置项和数据显示图表。
+			myChart6.setOption(option);
+
+		</script>
+	</body>
+
+</html>
